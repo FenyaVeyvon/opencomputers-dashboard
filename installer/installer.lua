@@ -78,13 +78,21 @@ local function install()
     end
   end
   if not fs.exists(manifest.installDir .. "/config.lua") then
-    local src = manifest.installDir .. "/config.example.lua"
-    local file = io.open(src, "r")
-    if file then
-      local data = file:read("*a")
-      file:close()
-      assert(writeAtomic(manifest.installDir .. "/config.lua", data))
-    end
+    local data = table.concat({
+      "return {",
+      "  nodeId = \"base_pc_1\",",
+      "",
+      "  backend = {",
+      "    host = \"open.eonhorizon.net\",",
+      "    port = 4444,",
+      "    token = \"change-me\"",
+      "  },",
+      "",
+      "  debug = true",
+      "}",
+      ""
+    }, "\n")
+    assert(writeAtomic(manifest.installDir .. "/config.lua", data))
   end
   print("EonLink installed: " .. tostring(manifest.version))
 end

@@ -9,7 +9,7 @@ export class TcpGateway implements OnModuleInit {
   constructor(private readonly api: ApiService) {}
 
   onModuleInit() {
-    const port = Number(process.env.EONLINK_TCP_PORT ?? 4445);
+    const port = Number(process.env.EONLINK_TCP_PORT ?? process.env.PORT ?? 4444);
     createServer((socket) => this.handle(socket)).listen(port, () => {
       this.logger.log(`EonLink TCP JSON listening on ${port}`);
     });

@@ -2,7 +2,7 @@ local base = "https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashbo
 
 return {
   name = "EonLink",
-  version = "0.1.3",
+  version = "0.1.4",
   baseUrl = base,
   installDir = "/home/eonlink",
   files = {
@@ -11,7 +11,6 @@ return {
     { path = "bin/EonLink.lua", target = "/bin/EonLink.lua", url = base .. "/bin/eonlink.lua" },
     { path = "bin/eonlink.lua", target = "/bin/eonlink.lua", url = base .. "/bin/eonlink.lua" },
     { path = "main.lua", url = base .. "/app/main.lua" },
-    { path = "config.example.lua", url = base .. "/app/config.example.lua" },
     { path = "core/logger.lua", url = base .. "/app/core/logger.lua" },
     { path = "core/fsutil.lua", url = base .. "/app/core/fsutil.lua" },
     { path = "core/downloader.lua", url = base .. "/app/core/downloader.lua" },

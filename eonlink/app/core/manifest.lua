@@ -30,11 +30,6 @@ function M.installFiles(manifest, mode)
       end
     end
   end
-  local cfg = manifest.installDir .. "/config.lua"
-  if not fsutil.exists(cfg) then
-    local data = fsutil.readFile(manifest.installDir .. "/config.example.lua")
-    if data then fsutil.writeAtomic(cfg, data) end
-  end
   return true
 end
 

@@ -58,11 +58,7 @@ local function run()
 end
 
 local function listModules()
-  local cfg = assert(loadfile("/home/eonlink/config.lua"))()
-  print("Members for node: " .. tostring(cfg.nodeId or cfg.deviceId or "unknown"))
-  for _, name in ipairs(cfg.members or {}) do
-    print("[x] " .. tostring(name))
-  end
+  print("Members are managed by backend config per node.")
 end
 
 local function writeConfig(cfg)
@@ -72,16 +68,10 @@ local function writeConfig(cfg)
     "",
     "  backend = {",
     "    host = " .. string.format("%q", cfg.backend.host or "open.eonhorizon.net") .. ",",
-    "    port = " .. tostring(cfg.backend.port or 4445) .. ",",
+    "    port = " .. tostring(cfg.backend.port or 4444) .. ",",
     "    token = " .. string.format("%q", cfg.backend.token or "change-me"),
-    "  },",
-    "",
-    "  members = {"
+    "  },"
   }
-  for _, name in ipairs(cfg.members or {}) do
-    lines[#lines + 1] = "    " .. string.format("%q", name) .. ","
-  end
-  lines[#lines + 1] = "  },"
   lines[#lines + 1] = ""
   lines[#lines + 1] = "  debug = " .. tostring(cfg.debug and true or false)
   lines[#lines + 1] = "}"
@@ -90,19 +80,7 @@ local function writeConfig(cfg)
 end
 
 local function setModule(name, enabled)
-  if not name then error("member name required") end
-  local cfg = assert(loadfile("/home/eonlink/config.lua"))()
-  cfg.members = cfg.members or {}
-  local found = false
-  for i = #cfg.members, 1, -1 do
-    if cfg.members[i] == name then
-      found = true
-      if not enabled then table.remove(cfg.members, i) end
-    end
-  end
-  if enabled and not found then table.insert(cfg.members, name) end
-  writeConfig(cfg)
-  print((enabled and "member enabled: " or "member disabled: ") .. name)
+  error("members are managed by backend config")
 end
 
 local function version()
