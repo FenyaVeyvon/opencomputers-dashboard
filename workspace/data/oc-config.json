@@ -1,0 +1,30 @@
+{
+  "nodes": {
+    "main-base": {
+      "version": 1,
+      "config": {
+        "node": "main-base",
+        "owner": "FenyaVeyvon",
+        "members": ["ElliEmerald"],
+        "scanRange": 64,
+        "tick": 0.5,
+        "fullScanEvery": 1,
+        "meScanEvery": 2,
+        "fluxScanEvery": 1,
+        "telemetryEnabled": true,
+        "telemetryUrl": "https://open.eonhorizon.net/api/oc/telemetry",
+        "telemetryToken": "CHANGE_ME_SECRET",
+        "telemetryEvery": 1,
+        "remoteConfigEnabled": true,
+        "configUrl": "https://open.eonhorizon.net/api/oc/config",
+        "configEvery": 10,
+        "playerTTL": 300,
+        "chatboxName": "§bEon§7Dash",
+        "maxChat": 30,
+        "maxLogs": 20,
+        "maxItems": 500,
+        "topItems": 12
+      }
+    }
+  }
+}
