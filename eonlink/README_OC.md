@@ -11,7 +11,7 @@ wget -fq https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashboard/m
 ```lua
 backend = {
   host = "open.eonhorizon.net",
-  port = 4444,
+  port = 4445,
   token = "change-me"
 }
 ```

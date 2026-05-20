@@ -3,7 +3,7 @@ return {
 
   backend = {
     host = "open.eonhorizon.net",
-    port = 4444,
+    port = 4445,
     token = "change-me"
   },
 
