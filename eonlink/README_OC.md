@@ -24,7 +24,7 @@ EonLink run
 
 При запуске node:
 
-- подключается к backend по TCP JSON;
+- подключается к backend по HTTP JSON через `open.eonhorizon.net`;
 - отправляет `hello`;
 - забирает свой config по `nodeId`;
 - применяет `members` через OpenComputers users;

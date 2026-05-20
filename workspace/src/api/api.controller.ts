@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiService } from './api.service';
 
 @Controller('api')
@@ -31,5 +31,22 @@ export class ApiController {
   @Get('nodes/:node/logs')
   getLogs(@Param('node') node: string) {
     return this.api.getLogs(node);
+  }
+
+  @Post('nodes/:node/rpc')
+  async rpc(
+    @Param('node') node: string,
+    @Body()
+    body: {
+      t?: string;
+      token?: string;
+      level?: string;
+      message?: string;
+    },
+  ) {
+    if (body.t === 'log') {
+      await this.api.writeLog(node, body.level || 'info', body.message || '');
+    }
+    return this.api.getConfig(node, body.token);
   }
 }

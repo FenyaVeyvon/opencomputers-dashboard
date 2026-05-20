@@ -5,7 +5,7 @@ EonLink - OpenComputers 1.12.2 node runtime + NestJS backend.
 Архитектура:
 
 ```text
-OpenComputers Lua GUI <-> TCP JSON Line Protocol <-> NestJS API + Prisma <-> PostgreSQL <-> Web Dashboard
+OpenComputers Lua GUI <-> HTTP JSON Protocol <-> NestJS API + Prisma <-> PostgreSQL <-> Web Dashboard
 ```
 
 Lua-node при запуске подключается к backend по TCP, отправляет `hello`, получает свой конфиг по `nodeId`, применяет `members` через `computer.addUser/removeUser` и показывает локальный GUI со статусом, версией конфига, members и log.

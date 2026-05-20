@@ -2,7 +2,7 @@ local base = "https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashbo
 
 return {
   name = "EonLink",
-  version = "0.1.2",
+  version = "0.1.3",
   baseUrl = base,
   installDir = "/home/eonlink",
   files = {

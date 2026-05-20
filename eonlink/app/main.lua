@@ -12,6 +12,7 @@ if not configFn then error("config load failed: " .. tostring(configErr)) end
 local config = configFn()
 config.nodeId = config.nodeId or config.deviceId or "base_pc_1"
 config.members = config.members or {}
+config.backend.nodeId = config.nodeId
 
 local log = logger.new(config.debug)
 local logs = {}
