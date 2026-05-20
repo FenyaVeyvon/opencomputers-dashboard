@@ -10,6 +10,11 @@ export class ApiController {
     return this.api.getNodes();
   }
 
+  @Get('health')
+  getHealth() {
+    return { ok: true, service: 'eonlink', time: Date.now() };
+  }
+
   @Get('nodes/:node')
   getNode(@Param('node') node: string) {
     return this.api.getNode(node);
@@ -46,6 +51,8 @@ export class ApiController {
   ) {
     if (body.t === 'log') {
       await this.api.writeLog(node, body.level || 'info', body.message || '');
+    } else if (body.t === 'chat_message') {
+      await this.api.writeLog(node, 'chat', body.message || '');
     }
     return this.api.getConfig(node, body.token);
   }

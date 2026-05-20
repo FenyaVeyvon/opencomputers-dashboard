@@ -3,8 +3,9 @@ local computer = require("computer")
 package.path = "/home/eonlink/?.lua;/home/eonlink/?/init.lua;" .. package.path
 local logger = require("core.logger")
 local net_tcp = require("core.net_tcp")
-local auth = require("core.auth")
 local gui = require("core.gui")
+local members = require("src.applied.members")
+local chatbox = require("src.modules.chatbox")
 
 local configPath = "/home/eonlink/config.lua"
 local configFn, configErr = loadfile(configPath)
@@ -13,7 +14,7 @@ local config = configFn()
 config.nodeId = config.nodeId or config.deviceId or "base_pc_1"
 config.backend = config.backend or {}
 config.backend.host = config.backend.host or "open.eonhorizon.net"
-config.backend.port = config.backend.port or 4444
+config.backend.port = config.backend.port or 4445
 config.backend.token = config.backend.token or "change-me"
 config.backend.nodeId = config.nodeId
 
@@ -26,6 +27,8 @@ local function addLog(msg)
 end
 
 local net = net_tcp.new(config.backend, log)
+local ctx = { config = config, net = net, log = log }
+chatbox.init(ctx)
 local configVersion = 0
 local lastReconnect = 0
 
@@ -53,7 +56,7 @@ local function applyNodeConfig(remote)
   if remote.configVersion and remote.configVersion == configVersion then return end
   configVersion = remote.configVersion or configVersion
   if type(remote.members) == "table" then serverConfig.members = remote.members end
-  auth.apply(serverConfig, log)
+  members.apply(serverConfig, log)
   addLog("config v" .. tostring(configVersion) .. " applied")
 end
 
@@ -78,6 +81,7 @@ while true do
   local now = os.clock()
   local msg = net:poll()
   if msg and msg.t == "config" then applyNodeConfig(msg) end
+  if msg then chatbox.onMessage(msg) end
   if net:isConnected() and now - lastConfig > 5 then
     local okConfig, errConfig = net:send({ t = "config_get", node = config.nodeId, token = config.backend.token })
     if not okConfig then addLog("config_get failed: " .. tostring(errConfig)) end
@@ -91,5 +95,6 @@ while true do
   end
   local dt = now - last
   last = now
-  event.pull(0.05)
+  local ev = { event.pull(0.05) }
+  if ev[1] then chatbox.onEvent(ev) end
 end
