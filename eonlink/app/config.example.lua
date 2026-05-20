@@ -1,5 +1,5 @@
 return {
-  deviceId = "base_pc_1",
+  nodeId = "base_pc_1",
 
   backend = {
     host = "127.0.0.1",
@@ -7,13 +7,7 @@ return {
     token = "change-me"
   },
 
-  modules = {
-    "chat",
-    "command_box",
-    "radar",
-    "machines",
-    "inventory"
-  },
+  members = {},
 
   debug = true
 }

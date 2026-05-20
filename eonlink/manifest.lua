@@ -16,15 +16,10 @@ return {
     { path = "core/fsutil.lua", url = base .. "/app/core/fsutil.lua" },
     { path = "core/downloader.lua", url = base .. "/app/core/downloader.lua" },
     { path = "core/manifest.lua", url = base .. "/app/core/manifest.lua" },
-    { path = "core/module_loader.lua", url = base .. "/app/core/module_loader.lua" },
-    { path = "core/event_bus.lua", url = base .. "/app/core/event_bus.lua" },
+    { path = "core/json.lua", url = base .. "/app/core/json.lua" },
+    { path = "core/auth.lua", url = base .. "/app/core/auth.lua" },
+    { path = "core/gui.lua", url = base .. "/app/core/gui.lua" },
     { path = "core/protocol.lua", url = base .. "/app/core/protocol.lua" },
-    { path = "core/net_tcp.lua", url = base .. "/app/core/net_tcp.lua" },
-    { path = "core/state.lua", url = base .. "/app/core/state.lua" },
-    { path = "modules/chat.lua", url = base .. "/app/modules/chat.lua" },
-    { path = "modules/command_box.lua", url = base .. "/app/modules/command_box.lua" },
-    { path = "modules/radar.lua", url = base .. "/app/modules/radar.lua" },
-    { path = "modules/machines.lua", url = base .. "/app/modules/machines.lua" },
-    { path = "modules/inventory.lua", url = base .. "/app/modules/inventory.lua" }
+    { path = "core/net_tcp.lua", url = base .. "/app/core/net_tcp.lua" }
   }
 }

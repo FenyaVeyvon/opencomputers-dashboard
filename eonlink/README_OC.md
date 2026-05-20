@@ -6,7 +6,15 @@
 wget -fq https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashboard/main/installer/installer.lua ins && ins
 ```
 
-Настрой backend в `/home/eonlink/config.lua`: `host`, `port`, `token`.
+Настрой `/home/eonlink/config.lua`:
+
+```lua
+backend = {
+  host = "IP_BACKEND",
+  port = 5050,
+  token = "change-me"
+}
+```
 
 Запуск:
 
@@ -14,13 +22,18 @@ wget -fq https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashboard/m
 EonLink run
 ```
 
+При запуске node:
+
+- подключается к backend по TCP JSON;
+- отправляет `hello`;
+- забирает свой config по `nodeId`;
+- применяет `members` через OpenComputers users;
+- рисует GUI со статусом, members и log.
+
 Команды:
 
 ```sh
 EonLink update
 EonLink repair
-EonLink modules
-EonLink enable radar
-EonLink disable inventory
 EonLink version
 ```

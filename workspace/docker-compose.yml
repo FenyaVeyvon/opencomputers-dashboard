@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: eonlink-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: eonlink
+      POSTGRES_USER: eonlink
+      POSTGRES_PASSWORD: eonlink
+    ports:
+      - "5432:5432"
+    volumes:
+      - eonlink_pg:/var/lib/postgresql/data
+
+volumes:
+  eonlink_pg:

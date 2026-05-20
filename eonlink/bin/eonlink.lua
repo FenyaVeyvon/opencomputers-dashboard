@@ -58,20 +58,17 @@ local function run()
 end
 
 local function listModules()
-  local manifest = fetchManifest()
   local cfg = assert(loadfile("/home/eonlink/config.lua"))()
-  local enabled = {}
-  for _, name in ipairs(cfg.modules or {}) do enabled[name] = true end
-  for _, f in ipairs(manifest.files or {}) do
-    local name = f.path:match("^modules/(.+)%.lua$")
-    if name then print((enabled[name] and "[x] " or "[ ] ") .. name) end
+  print("Members for node: " .. tostring(cfg.nodeId or cfg.deviceId or "unknown"))
+  for _, name in ipairs(cfg.members or {}) do
+    print("[x] " .. tostring(name))
   end
 end
 
 local function writeConfig(cfg)
   local lines = {
     "return {",
-    "  deviceId = " .. string.format("%q", cfg.deviceId or "base_pc_1") .. ",",
+    "  nodeId = " .. string.format("%q", cfg.nodeId or cfg.deviceId or "base_pc_1") .. ",",
     "",
     "  backend = {",
     "    host = " .. string.format("%q", cfg.backend.host or "127.0.0.1") .. ",",
@@ -79,9 +76,9 @@ local function writeConfig(cfg)
     "    token = " .. string.format("%q", cfg.backend.token or "change-me"),
     "  },",
     "",
-    "  modules = {"
+    "  members = {"
   }
-  for _, name in ipairs(cfg.modules or {}) do
+  for _, name in ipairs(cfg.members or {}) do
     lines[#lines + 1] = "    " .. string.format("%q", name) .. ","
   end
   lines[#lines + 1] = "  },"
@@ -93,19 +90,19 @@ local function writeConfig(cfg)
 end
 
 local function setModule(name, enabled)
-  if not name then error("module name required") end
+  if not name then error("member name required") end
   local cfg = assert(loadfile("/home/eonlink/config.lua"))()
-  cfg.modules = cfg.modules or {}
+  cfg.members = cfg.members or {}
   local found = false
-  for i = #cfg.modules, 1, -1 do
-    if cfg.modules[i] == name then
+  for i = #cfg.members, 1, -1 do
+    if cfg.members[i] == name then
       found = true
-      if not enabled then table.remove(cfg.modules, i) end
+      if not enabled then table.remove(cfg.members, i) end
     end
   end
-  if enabled and not found then table.insert(cfg.modules, name) end
+  if enabled and not found then table.insert(cfg.members, name) end
   writeConfig(cfg)
-  print((enabled and "enabled: " or "disabled: ") .. name)
+  print((enabled and "member enabled: " or "member disabled: ") .. name)
 end
 
 local function version()
