@@ -10,7 +10,7 @@ wget -fq https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashboard/m
 
 ```lua
 backend = {
-  host = "IP_BACKEND",
+  host = "open.eonhorizon.net",
   port = 5050,
   token = "change-me"
 }

@@ -2,7 +2,7 @@ return {
   nodeId = "base_pc_1",
 
   backend = {
-    host = "127.0.0.1",
+    host = "open.eonhorizon.net",
     port = 5050,
     token = "change-me"
   },

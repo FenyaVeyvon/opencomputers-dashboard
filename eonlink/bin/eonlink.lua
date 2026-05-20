@@ -71,7 +71,7 @@ local function writeConfig(cfg)
     "  nodeId = " .. string.format("%q", cfg.nodeId or cfg.deviceId or "base_pc_1") .. ",",
     "",
     "  backend = {",
-    "    host = " .. string.format("%q", cfg.backend.host or "127.0.0.1") .. ",",
+    "    host = " .. string.format("%q", cfg.backend.host or "open.eonhorizon.net") .. ",",
     "    port = " .. tostring(cfg.backend.port or 5050) .. ",",
     "    token = " .. string.format("%q", cfg.backend.token or "change-me"),
     "  },",

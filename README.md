@@ -34,7 +34,7 @@ EonLink run
 return {
   nodeId = "base_pc_1",
   backend = {
-    host = "127.0.0.1",
+    host = "open.eonhorizon.net",
     port = 5050,
     token = "change-me"
   },
@@ -77,7 +77,7 @@ GET   /api/nodes/:node/logs
 Пример настройки members:
 
 ```sh
-curl -X PATCH http://localhost:4444/api/nodes/base_pc_1/config ^
+curl -X PATCH http://open.eonhorizon.net/api/nodes/base_pc_1/config ^
   -H "Content-Type: application/json" ^
   -d "{\"members\":[\"FenyaVeyvon\",\"FriendNick\"],\"token\":\"change-me\"}"
 ```
