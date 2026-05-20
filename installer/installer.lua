@@ -9,12 +9,15 @@ local function readAll(url)
   if not ok or not handle then return nil, "request failed: " .. tostring(handle) end
   local chunks = {}
   while true do
-    local okChunk, chunk = pcall(handle.read, handle)
+    local okChunk, chunk = pcall(function() return handle.read() end)
+    if not okChunk then
+      okChunk, chunk = pcall(function() return handle.read(math.huge) end)
+    end
     if not okChunk then return nil, "read failed: " .. tostring(chunk) end
     if not chunk then break end
     chunks[#chunks + 1] = chunk
   end
-  pcall(handle.close, handle)
+  pcall(function() handle.close() end)
   return table.concat(chunks)
 end
 

@@ -29,12 +29,15 @@ local function fetchManifest()
   if not ok or not handle then return nil, handle end
   local chunks = {}
   while true do
-    local okRead, chunk = pcall(handle.read, handle)
+    local okRead, chunk = pcall(function() return handle.read() end)
+    if not okRead then
+      okRead, chunk = pcall(function() return handle.read(math.huge) end)
+    end
     if not okRead then return nil, chunk end
     if not chunk then break end
     chunks[#chunks + 1] = chunk
   end
-  pcall(handle.close, handle)
+  pcall(function() handle.close() end)
   local fn = assert(load(table.concat(chunks), "=manifest", "t", {}))
   return fn()
 end

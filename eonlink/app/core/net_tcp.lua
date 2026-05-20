@@ -19,7 +19,10 @@ function M.new(config, log)
     return self:connect()
   end
   function net:close()
-    if self.socket then pcall(self.socket.close, self.socket) end
+    if self.socket then
+      local sock = self.socket
+      pcall(function() sock.close() end)
+    end
     self.socket = nil
     self.buffer = ""
   end
@@ -28,13 +31,20 @@ function M.new(config, log)
   end
   function net:send(msg)
     if not self.socket then return nil, "not connected" end
-    local ok, err = pcall(self.socket.write, self.socket, protocol.encode(msg))
+    local data = protocol.encode(msg)
+    local ok, err = pcall(function() return self.socket.write(data) end)
+    if not ok then
+      ok, err = pcall(function() return self.socket.write(self.socket, data) end)
+    end
     if not ok then self:close(); return nil, err end
     return true
   end
   function net:poll()
     if not self.socket then return nil end
-    local ok, chunk = pcall(self.socket.read, self.socket, 4096)
+    local ok, chunk = pcall(function() return self.socket.read(4096) end)
+    if not ok then
+      ok, chunk = pcall(function() return self.socket.read(self.socket, 4096) end)
+    end
     if not ok then self:close(); return nil end
     if chunk and #chunk > 0 then self.buffer = self.buffer .. chunk end
     local line = self.buffer:match("^(.-)\n")

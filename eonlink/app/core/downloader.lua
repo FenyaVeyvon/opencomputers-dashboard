@@ -7,12 +7,15 @@ function M.fetch(url)
   if not ok or not handle then return nil, tostring(handle) end
   local chunks = {}
   while true do
-    local okRead, chunk = pcall(handle.read, handle)
+    local okRead, chunk = pcall(function() return handle.read() end)
+    if not okRead then
+      okRead, chunk = pcall(function() return handle.read(math.huge) end)
+    end
     if not okRead then return nil, tostring(chunk) end
     if not chunk then break end
     chunks[#chunks + 1] = chunk
   end
-  pcall(handle.close, handle)
+  pcall(function() handle.close() end)
   return table.concat(chunks)
 end
 
