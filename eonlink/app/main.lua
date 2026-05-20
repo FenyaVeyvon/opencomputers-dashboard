@@ -1,16 +1,20 @@
 local event = require("event")
+local computer = require("computer")
 package.path = "/home/eonlink/?.lua;/home/eonlink/?/init.lua;" .. package.path
 local logger = require("core.logger")
 local net_tcp = require("core.net_tcp")
 local auth = require("core.auth")
 local gui = require("core.gui")
-local fsutil = require("core.fsutil")
 
 local configPath = "/home/eonlink/config.lua"
 local configFn, configErr = loadfile(configPath)
 if not configFn then error("config load failed: " .. tostring(configErr)) end
 local config = configFn()
 config.nodeId = config.nodeId or config.deviceId or "base_pc_1"
+config.backend = config.backend or {}
+config.backend.host = config.backend.host or "open.eonhorizon.net"
+config.backend.port = config.backend.port or 4444
+config.backend.token = config.backend.token or "change-me"
 config.backend.nodeId = config.nodeId
 
 local log = logger.new(config.debug)
@@ -23,34 +27,25 @@ end
 
 local net = net_tcp.new(config.backend, log)
 local configVersion = 0
+local lastReconnect = 0
 
 local function hello()
-  net:send({ t = "hello", node = config.nodeId, token = config.backend.token })
+  local ok, err = net:send({ t = "hello", node = config.nodeId, token = config.backend.token })
+  if not ok then addLog("hello failed: " .. tostring(err)) end
 end
 
 local function ensureConnected()
   if net:isConnected() then return end
-  if net:connect() then
+  local now = computer.uptime()
+  if now - lastReconnect < 3 then return end
+  lastReconnect = now
+  local ok, err = net:connect()
+  if ok then
     addLog("connected")
     hello()
+  else
+    addLog("connect failed: " .. tostring(err))
   end
-end
-
-local function saveRuntimeConfig()
-  local out = {
-    "return {",
-    "  nodeId = " .. string.format("%q", config.nodeId) .. ",",
-    "",
-    "  backend = {",
-    "    host = " .. string.format("%q", config.backend.host) .. ",",
-    "    port = " .. tostring(config.backend.port) .. ",",
-    "    token = " .. string.format("%q", config.backend.token),
-    "  },"
-  }
-  out[#out + 1] = ""
-  out[#out + 1] = "  debug = " .. tostring(config.debug and true or false)
-  out[#out + 1] = "}"
-  fsutil.writeAtomic(configPath, table.concat(out, "\n") .. "\n")
 end
 
 local function applyNodeConfig(remote)
@@ -84,8 +79,10 @@ while true do
   local msg = net:poll()
   if msg and msg.t == "config" then applyNodeConfig(msg) end
   if net:isConnected() and now - lastConfig > 5 then
-    net:send({ t = "config_get", node = config.nodeId, token = config.backend.token })
-    net:send({ t = "log", node = config.nodeId, level = "info", message = "heartbeat" })
+    local okConfig, errConfig = net:send({ t = "config_get", node = config.nodeId, token = config.backend.token })
+    if not okConfig then addLog("config_get failed: " .. tostring(errConfig)) end
+    local okLog, errLog = net:send({ t = "log", node = config.nodeId, level = "info", message = "heartbeat" })
+    if not okLog then addLog("log failed: " .. tostring(errLog)) end
     lastConfig = now
   end
   if now - lastDraw > 1 then
