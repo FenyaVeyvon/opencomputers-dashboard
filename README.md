@@ -35,7 +35,7 @@ return {
   nodeId = "base_pc_1",
   backend = {
     host = "open.eonhorizon.net",
-    port = 4444,
+    port = 4445,
     token = "change-me"
   },
   debug = true
@@ -58,7 +58,7 @@ npm run start:dev
 
 ```env
 PORT=4444
-EONLINK_TCP_PORT=4444
+EONLINK_TCP_PORT=4445
 EONLINK_NODE_TOKEN=change-me
 DATABASE_URL="postgresql://eonlink:eonlink@localhost:5432/eonlink?schema=public"
 ```

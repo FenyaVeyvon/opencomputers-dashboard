@@ -68,7 +68,7 @@ local function writeConfig(cfg)
     "",
     "  backend = {",
     "    host = " .. string.format("%q", cfg.backend.host or "open.eonhorizon.net") .. ",",
-    "    port = " .. tostring(cfg.backend.port or 4444) .. ",",
+    "    port = " .. tostring(cfg.backend.port or 4445) .. ",",
     "    token = " .. string.format("%q", cfg.backend.token or "change-me"),
     "  },"
   }
