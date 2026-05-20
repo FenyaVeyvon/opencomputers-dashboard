@@ -21,10 +21,13 @@ function M.targetFor(manifest, file)
 end
 
 function M.installFiles(manifest, mode)
+  local currentVersion = fsutil.readFile(manifest.installDir .. "/VERSION")
+  if currentVersion then currentVersion = currentVersion:gsub("%s+$", "") end
+  local stale = currentVersion ~= tostring(manifest.version)
   for _, file in ipairs(manifest.files or {}) do
     local target = M.targetFor(manifest, file)
     if target ~= manifest.installDir .. "/config.lua" then
-      if mode ~= "repair" or not fsutil.exists(target) then
+      if mode == "install" or mode == "update" or stale or not fsutil.exists(target) then
         local ok, err = downloader.download(file.url, target)
         if not ok then return nil, err end
       end

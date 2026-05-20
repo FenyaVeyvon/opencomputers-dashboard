@@ -47,7 +47,9 @@ local function install(mode)
   if not manifest then error(err) end
   local core = loadCoreManifest()
   if not core then
-    error("core manifest is missing, run installer bootstrap first")
+    shell.execute("wget -fq https://raw.githubusercontent.com/FenyaVeyvon/opencomputers-dashboard/main/installer/installer.lua /tmp/eonlink-installer.lua")
+    shell.execute("/tmp/eonlink-installer.lua")
+    return
   end
   assert(core.installFiles(manifest, mode))
   print("EonLink " .. mode .. " complete: " .. tostring(manifest.version))
