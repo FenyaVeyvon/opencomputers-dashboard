@@ -6,7 +6,9 @@ function M.new(config, log)
   local net = { config = config, log = log, socket = nil, buffer = "" }
   function net:connect()
     self:close()
-    local ok, sock = pcall(component.internet.connect, self.config.host, self.config.port)
+    local host = tostring(self.config.host or "")
+    host = host:gsub("^https?://", ""):gsub("/.*$", "")
+    local ok, sock = pcall(component.internet.connect, host, self.config.port)
     if ok and sock then
       self.socket = sock
       return true
