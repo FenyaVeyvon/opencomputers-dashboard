@@ -91,8 +91,14 @@ function conn:send(data) if isOpen then for i = 1, #data, 65530 do oldSend(self,
 local w, h = term.getSize()
 local win = rawterm.server(conn, w, h, 0, "ComputerCraft Remote Terminal: " .. (os.computerLabel() or ("Computer " .. os.computerID())), term.current())
 win.setVisible(false)
+-- Safe transfer mode: disables remote monitor mirroring so filesystem
+-- requests are processed by one WebSocket receiver (main terminal only).
+-- The physical monitors remain accessible to programs via peripheral APIs.
+-- Switch to true only if you explicitly need remote monitor windows.
+local MIRROR_MONITORS = false
 local monitors, ids = {}, {[0] = true}
 local oldcall = peripheral.call
+if MIRROR_MONITORS then
 for i, v in ipairs{peripheral.find "monitor"} do
     local mw, mh = v.getSize()
     local name = peripheral.getName(v)
@@ -102,6 +108,7 @@ for i, v in ipairs{peripheral.find "monitor"} do
     monitors[name] = {id = i, win = rawterm.server(conn, mw, mh, i, "ComputerCraft Remote Terminal: Monitor " .. name, p, nil, nil, nil, true)}
     monitors[name].win.setVisible(false)
     ids[i] = true
+end
 end
 function peripheral.call(side, method, ...)
     if monitors[side] then return monitors[side].win[method](...)
@@ -141,7 +148,7 @@ end, function()
 end, function()
     while true do
         local ev, side = os.pullEventRaw()
-        if ev == "peripheral" and peripheral.getType(side) == "monitor" and not monitors[side] then
+        if MIRROR_MONITORS and ev == "peripheral" and peripheral.getType(side) == "monitor" and not monitors[side] then
             local id = #ids + 1
             local mw, mh = oldcall(side, "getSize")
             local methods = peripheral.getMethods(side)
